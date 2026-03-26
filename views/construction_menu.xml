@@ -1,0 +1,15 @@
+<odoo>
+    <menuitem
+            id="construction_ms_root_menu"
+            name="Construction Management"
+    />
+
+    <menuitem
+            id="projects_menu"
+            name="Projects"
+            parent="construction_ms_root_menu"
+            sequence="1"
+    />
+
+
+</odoo>
