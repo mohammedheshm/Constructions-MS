@@ -9,6 +9,7 @@
         'data/sequence.xml',
         'views/construction_menu.xml',
         'views/construction_project_view.xml',
+        'views/construction_site_view.xml',
     ],
 
     'application': True,
