@@ -1,0 +1,10 @@
+<odoo>
+    <data>
+        <record id="project_sequence" model="ir.sequence">
+            <field name="name">Site Seq.</field>
+            <field name="code">site_seq</field>
+            <field name="prefix">SIT</field>
+            <field name="padding">5</field>
+        </record>
+    </data>
+</odoo>
