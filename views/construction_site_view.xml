@@ -10,6 +10,9 @@
                 <field name="location"/>
                 <field name="start_date"/>
                 <field name="end_date"/>
+                <field name="duration"/>
+                <field name="worker_count"/>
+                <field name="engineer_count"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -40,6 +43,7 @@
                             string="Set To Done"
                             invisible="state != 'in_progress'"/>
                     <field name="state" widget="statusbar"/>
+
                 </header>
 
                 <sheet>
@@ -59,14 +63,21 @@
                         <field name="project_id"/>
                         <field name="start_date"/>
                         <field name="end_date"/>
+                        <field name="duration"/>
                     </group>
 
                     <group string="Workers and Engineers">
                         <field name="worker_ids" widget="many2many_tags"/>
                         <field name="engineer_ids" widget="many2many_tags"/>
-                    </group>
+                        <field name="worker_count"/>
+                        <field name="engineer_count"/>
 
+                    </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -115,6 +126,15 @@
         <field name="code">
             action = records.action_close()
         </field>
+    </record>
+
+    <record id="site_cron" model="ir.cron">
+        <field name="name">Update Site Status</field>
+        <field name="model_id" ref="model_construction_site"/>
+        <field name="state">code</field>
+        <field name="code">model.check_site_status()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
     </record>
 
 
