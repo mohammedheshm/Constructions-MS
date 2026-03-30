@@ -107,6 +107,7 @@
                         <group string="Project Information">
                             <field name="customer"/>
                             <field name="project_manager"/>
+                            <field name="site_ids" widget="many2many_tags"/>
                         </group>
 
                         <group string="Project Dates">

@@ -43,7 +43,7 @@ class ConstructionProject(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('project_code', 'New') == 'New':
-            vals['project_code'] = self.env['ir.sequence'].next_by_code('Project_seq') or 'New'
+            vals['project_code'] = self.env['ir.sequence'].next_by_code('project_seq') or 'New'
         return super(ConstructionProject, self).create(vals)
 
     @api.constrains('start_date', 'end_date')

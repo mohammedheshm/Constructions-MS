@@ -1,0 +1,126 @@
+<odoo>
+    <record id="workforce_view_tree" model="ir.ui.view">
+        <field name="name">workforce tree</field>
+        <field name="model">construction.workforce</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="workforce_name"/>
+                <field name="workforce_code"/>
+                <field name="worker_type"/>
+                <field name="job_title"/>
+                <field name="salary_type"/>
+                <field name="salary"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="hire_date"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="project_view_search" model="ir.ui.view">
+        <field name="name">workforce search</field>
+        <field name="model">construction.workforce</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="workforce_name"/>
+                <field name="workforce_code"/>
+                <field name="worker_type"/>
+                <field name="job_title"/>
+
+
+                <filter name="worker_type"
+                        string="All Worker"
+                        domain="[('worker_type','=','worker')]"/>
+
+                <filter name="engineer_type"
+                        string="All Engineer"
+                        domain="[('worker_type','=','engineer')]"/>
+
+                <filter name="contractor_type"
+                        string="All contractor"
+                        domain="[('worker_type','=','contractor')]"/>
+
+                <filter name="supervisor_type"
+                        string="All supervisor"
+                        domain="[('worker_type','=','supervisor')]"/>
+
+
+                <filter name="group_salary"
+                        string="Group By Salary"
+                        context="{'group_by':'salary'}"/>
+
+
+            </search>
+        </field>
+    </record>
+
+
+    <record id="workforce_view_form" model="ir.ui.view">
+        <field name="name">workforce form</field>
+        <field name="model">construction.workforce</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="workforce_code"/>
+                        <h1>
+                            <field name="workforce_code"/>
+                        </h1>
+
+                        <label for="workforce_name"/>
+                        <h3>
+                            <field name="workforce_name"/>
+                        </h3>
+                    </div>
+
+                    <group>
+                        <group string="Basic Information">
+                            <field name="hire_date"/>
+                            <field name="active"/>
+                        </group>
+
+                        <group string="Job Information">
+                            <field name="worker_type"/>
+                            <field name="job_title"/>
+                            <field name="site_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group string="Salary Information">
+                        <field name="salary_type"/>
+                        <field name="salary"/>
+                    </group>
+
+                    <group string="Contact Information">
+                        <field name="phone"/>
+                        <field name="email"/>
+                    </group>
+                    <notebook>
+
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="workforce_action" model="ir.actions.act_window">
+        <field name="name">workforce</field>
+        <field name="res_model">construction.workforce</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem
+            id="workforce_menu_item"
+            name="workforce"
+            parent="workforce_menu"
+            action="workforce_action"
+            sequence="3"
+    />
+
+</odoo>

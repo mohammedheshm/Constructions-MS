@@ -2,7 +2,7 @@
     <data>
         <record id="project_sequence" model="ir.sequence">
             <field name="name">Project Seq.</field>
-            <field name="code">Project_seq</field>
+            <field name="code">project_seq</field>
             <field name="prefix">PRJ</field>
             <field name="padding">5</field>
         </record>

@@ -1,3 +1,5 @@
+from vobject import readOne
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -22,11 +24,8 @@ class ConstructionSite(models.Model):
         ('closed', 'Closed'),
     ], string='Status', default='draft', required=True, tracking=True)
 
-    worker_ids = fields.Many2many('res.partner', string='Workers')
-    engineer_ids = fields.Many2many('res.users', string='Engineers')
-    worker_count = fields.Integer(string='Workers Count', compute='_compute_counts', readonly=True)
-    engineer_count = fields.Integer(string='Engineers Count', compute='_compute_counts', readonly=True)
-
+    workforce_count = fields.Integer(string='Workforce Count', compute='_compute_workforce_counts', readonly=True)
+    workforce_ids = fields.Many2many('construction.workforce', string='Workforce')
     _sql_constraints = [
         ('unique_site_project',
          'unique(site_name,project_id)',
@@ -68,11 +67,10 @@ class ConstructionSite(models.Model):
             if rec.start_date and rec.start_date < fields.Date.today():
                 raise ValidationError("Start Date cannot be in the past!")
 
-    @api.depends('worker_ids', 'engineer_ids')
-    def _compute_counts(self):
+    @api.depends('workforce_ids')
+    def _compute_workforce_counts(self):
         for rec in self:
-            rec.worker_count = len(rec.worker_ids)
-            rec.engineer_count = len(rec.engineer_ids)
+            rec.workforce_count = len(rec.workforce_ids)
 
     @api.depends('start_date', 'end_date')
     def _compute_duration(self):

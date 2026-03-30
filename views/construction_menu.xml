@@ -16,6 +16,12 @@
             parent="construction_ms_root_menu"
             sequence="2"
     />
+    <menuitem
+            id="workforce_menu"
+            name="Workforce"
+            parent="construction_ms_root_menu"
+            sequence="3"
+    />
 
 
 </odoo>

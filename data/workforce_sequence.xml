@@ -1,0 +1,10 @@
+<odoo>
+    <data>
+        <record id="workforce_sequence" model="ir.sequence">
+            <field name="name">Workforce Seq.</field>
+            <field name="code">workforce_seq</field>
+            <field name="prefix">WF</field>
+            <field name="padding">5</field>
+        </record>
+    </data>
+</odoo>
