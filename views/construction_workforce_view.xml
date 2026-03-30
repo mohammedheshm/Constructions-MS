@@ -8,11 +8,11 @@
                 <field name="workforce_code"/>
                 <field name="worker_type"/>
                 <field name="job_title"/>
-                <field name="salary_type"/>
-                <field name="salary"/>
+                <field name="salary_display"/>
                 <field name="phone"/>
                 <field name="email"/>
                 <field name="hire_date"/>
+                <field name="availability"/>
                 <field name="active"/>
             </tree>
         </field>
@@ -78,17 +78,22 @@
                         <group string="Basic Information">
                             <field name="hire_date"/>
                             <field name="active"/>
+                            <field name="availability"/>
+
                         </group>
 
                         <group string="Job Information">
                             <field name="worker_type"/>
                             <field name="job_title"/>
                             <field name="site_ids" widget="many2many_tags"/>
+                            <field name="site_count"/>
                         </group>
                     </group>
                     <group string="Salary Information">
                         <field name="salary_type"/>
                         <field name="salary"/>
+                        <field name="salary_display"/>
+                        <field name="daily_cost"/>
                     </group>
 
                     <group string="Contact Information">
@@ -117,10 +122,10 @@
 
     <menuitem
             id="workforce_menu_item"
-            name="workforce"
+            name="Workers"
             parent="workforce_menu"
             action="workforce_action"
-            sequence="3"
+            sequence="1"
     />
 
 </odoo>
