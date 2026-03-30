@@ -95,14 +95,18 @@ class ConstructionWorkforce(models.Model):
                 rec.salary_display = f"{rec.salary} / Day"
             elif rec.salary_type == 'monthly':
                 rec.salary_display = f"{rec.salary} / Month"
+            else:
+                rec.salary_display = ""
 
     @api.depends('salary', 'salary_type')
     def _compute_daily_cost(self):
         for rec in self:
             if rec.salary_type == 'daily':
                 rec.daily_cost = rec.salary
-            else:
+            elif rec.salary_type == 'monthly':
                 rec.daily_cost = rec.salary / 30
+            else:
+                rec.daily_cost = 0
 
     @api.depends('site_ids.project_id')
     def _compute_projects(self):
