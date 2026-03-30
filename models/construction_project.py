@@ -8,6 +8,13 @@ class ConstructionProject(models.Model):
     _rec_name = 'project_name'
 
     site_ids = fields.One2many('construction.site', 'project_id', string='Sites')
+    workforce_ids = fields.Many2many(
+        'construction.workforce',
+        string='Workforce',
+        compute='_compute_workforce',
+        store=False,
+        readonly=True,
+    )
     project_name = fields.Char(string='Project Name', required=True)
     project_code = fields.Char(default='New', string='Project Code', readonly=True)
     customer = fields.Char(string='Customer')
@@ -51,3 +58,8 @@ class ConstructionProject(models.Model):
         for rec in self:
             if rec.end_date < rec.start_date:
                 raise ValidationError('End Date must be after Start Date!')
+
+    @api.depends('site_ids.workforce_ids')
+    def _compute_workforce(self):
+        for project in self:
+            project.workforce_ids = project.site_ids.mapped('workforce_ids')

@@ -38,6 +38,12 @@ class ConstructionWorkforce(models.Model):
     active = fields.Boolean(string='Active', default=True)
     notes = fields.Text(string='Notes')
     site_ids = fields.Many2many('construction.site', string='Sites')
+    project_ids = fields.Many2many(
+        'construction.project',
+        string='Projects',
+        compute='_compute_projects',
+        readonly=True,
+    )
     site_count = fields.Integer(string='Site Count', compute='_compute_site_count', readonly=True)
     availability = fields.Selection([
         ('available', 'Available'),
@@ -97,3 +103,9 @@ class ConstructionWorkforce(models.Model):
                 rec.daily_cost = rec.salary
             else:
                 rec.daily_cost = rec.salary / 30
+
+    @api.depends('site_ids.project_id')
+    def _compute_projects(self):
+        for rec in self:
+            projects = rec.site_ids.mapped('project_id')
+            rec.project_ids = projects

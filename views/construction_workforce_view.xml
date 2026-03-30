@@ -85,6 +85,7 @@
                         <group string="Job Information">
                             <field name="worker_type"/>
                             <field name="job_title"/>
+                            <field name="project_ids" widget="many2many_tags" readonly="1"/>
                             <field name="site_ids" widget="many2many_tags"/>
                             <field name="site_count"/>
                         </group>
