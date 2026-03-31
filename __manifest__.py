@@ -13,6 +13,7 @@
         'views/construction_project_view.xml',
         'views/construction_site_view.xml',
         'views/construction_workforce_view.xml',
+        'views/construction_attendance_view.xml',
     ],
 
     'application': True,

@@ -1,0 +1,65 @@
+<odoo>
+    <record id="attendance_view_tree" model="ir.ui.view">
+        <field name="name">attendance tree</field>
+        <field name="model">construction.attendance</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="workforce_id"/>
+                <field name="project_id"/>
+                <field name="date"/>
+                <field name="status"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="duration"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="attendance_view_form" model="ir.ui.view">
+        <field name="name">attendance form</field>
+        <field name="model">construction.attendance</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="workforce_id"/>
+                        <field name="site_ids" widget="many2many_tags"/>
+                        <field name="project_id"/>
+                        <field name="date"/>
+                        <field name="status"/>
+                    </group>
+                    <group>
+                        <field name="check_in"/>
+                        <field name="check_out"/>
+                        <field name="check_in_ampm"/>
+                        <field name="check_out_ampm"/>
+                        <field name="duration"/>
+                        <field name="active"/>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="attendance_action" model="ir.actions.act_window">
+        <field name="name">attendance</field>
+        <field name="res_model">construction.attendance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem
+            id="attendance_menu_item"
+            name="Attendance"
+            parent="workforce_menu"
+            action="attendance_action"
+            sequence="2"
+    />
+
+</odoo>

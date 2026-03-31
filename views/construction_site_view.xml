@@ -142,7 +142,7 @@
 
     <menuitem id="sites_menu_item"
               name="Sites"
-              parent="sites_menu"
+              parent="projects_menu"
               action="site_action"
               sequence="2"/>
 </odoo>
