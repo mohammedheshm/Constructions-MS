@@ -5,17 +5,24 @@
     />
 
     <menuitem
-            id="projects_menu"
+            id="construction_menu"
             name="Constructions"
             parent="construction_ms_root_menu"
             sequence="1"
     />
+    <menuitem
+            id="resources_menu"
+            name="Materials &amp; Tasks"
+            parent="construction_ms_root_menu"
+            sequence="2"
+    />
+
 
     <menuitem
             id="workforce_menu"
             name="Workforce"
             parent="construction_ms_root_menu"
-            sequence="2"
+            sequence="3"
     />
 
 

@@ -1,5 +1,3 @@
-from vobject import readOne
-
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -26,6 +24,19 @@ class ConstructionSite(models.Model):
 
     workforce_count = fields.Integer(string='Workforce Count', compute='_compute_workforce_counts', readonly=True)
     workforce_ids = fields.Many2many('construction.workforce', string='Workforce')
+
+    material_ids = fields.One2many(
+        'construction.site.material',
+        'site_id',
+        string='Materials',
+    )
+    total_material_cost = fields.Float(
+        string='Total Material Cost',
+        compute='_compute_total_material_cost',
+        readonly=True,
+    )
+
+
     _sql_constraints = [
         ('unique_site_project',
          'unique(site_name,project_id)',
@@ -85,3 +96,8 @@ class ConstructionSite(models.Model):
         for rec in self.search([]):
             if rec.end_date and rec.end_date < today:
                 rec.state = 'done'
+
+    @api.depends('material_ids.total_price')
+    def _compute_total_material_cost(self):
+        for rec in self:
+            rec.total_material_cost = sum(rec.material_ids.mapped('total_price'))

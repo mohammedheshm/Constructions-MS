@@ -164,7 +164,7 @@
     <menuitem
             id="projects_menu_item"
             name="Projects"
-            parent="projects_menu"
+            parent="construction_menu"
             action="projects_action"
             sequence="1"
     />

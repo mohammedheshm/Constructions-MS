@@ -4,5 +4,6 @@ access_construction_site,access_construction_site,model_construction_site,,1,1,1
 access_construction_workforce,access_construction_workforce,model_construction_workforce,,1,1,1,1
 access_construction_attendance,access_construction_attendance,model_construction_attendance,,1,1,1,1
 access_construction_payroll,access_construction_payroll,model_construction_payroll,,1,1,1,1
+access_construction_site_material,access_construction_site_material,model_construction_site_material,,1,1,1,1
 
 
