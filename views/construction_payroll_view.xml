@@ -1,0 +1,55 @@
+<odoo>
+    <record id="payroll_view_tree" model="ir.ui.view">
+        <field name="name">payroll tree</field>
+        <field name="model">construction.payroll</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="workforce_id"/>
+                <field name="hire_date"/>
+                <field name="last_attendance_date"/>
+                <field name="total_hours"/>
+                <field name="total_salary"/>
+                <field name="is_paid"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="payroll_view_form" model="ir.ui.view">
+        <field name="name">payroll form</field>
+        <field name="model">construction.payroll</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="workforce_id"/>
+                        <field name="hire_date"/>
+                        <field name="last_attendance_date"/>
+                        <field name="attendance_ids" widget="many2many_tags"/>
+                        <field name="total_hours"/>
+                        <field name="total_salary"/>
+                        <field name="is_paid"/>
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="payroll_action" model="ir.actions.act_window">
+        <field name="name">payroll</field>
+        <field name="res_model">construction.payroll</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem
+            id="payroll_menu_item"
+            name="Payroll"
+            parent="workforce_menu"
+            action="payroll_action"
+            sequence="3"
+    />
+
+</odoo>

@@ -56,6 +56,8 @@ class ConstructionAttendance(models.Model):
         store=False
     )
 
+    is_paid = fields.Boolean(string="Paid", default=False, readonly=True)
+
     @api.depends('check_in', 'check_out')
     def _compute_duration(self):
         for rec in self:
