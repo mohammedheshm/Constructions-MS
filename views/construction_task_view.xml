@@ -1,0 +1,99 @@
+<odoo>
+    <record id="construction_task_tree" model="ir.ui.view">
+        <field name="name">construction task tree</field>
+        <field name="model">construction.task</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="state"/>
+                <field name="progress"/>
+                <field name="total_material_cost"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="construction_task_form" model="ir.ui.view">
+        <field name="name">construction task form</field>
+        <field name="model">construction.task</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+
+                    <button name="action_draft"
+                            type="object"
+                            class="btn-secondary"
+                            string="Set To Draft"
+                            invisible="state in ('draft','closed')"
+                    />
+
+                    <button name="action_in_progress"
+                            type="object"
+                            class="btn-secondary"
+                            string="Start Task"
+                            invisible="state != 'draft'"/>
+
+                    <button name="action_done"
+                            type="object"
+                            class="btn-success"
+                            string="Mark as Done"
+                            invisible="state != 'in_progress'"
+                    />
+                    <button name="action_cancel"
+                            type="object"
+                            string="Cancel"
+                            class="btn-warning"
+                            invisible="state == 'cancelled'"
+                    />
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="project_id"/>
+                        <field name="site_ids" widget="many2many_tags"/>
+                        <field name="assigned_workforce_ids" widget="many2many_tags"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="progress" widget="progressbar"/>
+                        <field name="total_material_cost"/>
+
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    <notebook>
+                        <page string="Materials per Site">
+                            <field name="site_material_line_display">
+                                <tree>
+                                    <field name="site_id"/>
+                                    <field name="material_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="construction_task_action" model="ir.actions.act_window">
+        <field name="name">Tasks</field>
+        <field name="res_model">construction.task</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            id="tasks_menu_item"
+            name="Tasks"
+            parent="resources_menu"
+            action="construction_task_action"
+            sequence="2"
+    />
+</odoo>

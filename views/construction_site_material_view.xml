@@ -49,6 +49,6 @@
             name="Materials per Site"
             parent="resources_menu"
             action="site_material_action"
-            sequence="3"
+            sequence="1"
     />
 </odoo>
