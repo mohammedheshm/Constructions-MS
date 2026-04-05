@@ -25,6 +25,13 @@ class ConstructionSite(models.Model):
     workforce_count = fields.Integer(string='Workforce Count', compute='_compute_workforce_counts', readonly=True)
     workforce_ids = fields.Many2many('construction.workforce', string='Workforce')
 
+    expense_ids = fields.One2many(
+        'construction.expense',
+        'site_id',
+        string='Expenses',
+        readonly=True,
+    )
+
     material_ids = fields.One2many(
         'construction.site.material',
         'site_id',
@@ -36,6 +43,10 @@ class ConstructionSite(models.Model):
         readonly=True,
     )
 
+    total_expense = fields.Float(
+        string="Total Expense",
+        compute="_compute_total_expense"
+    )
 
     _sql_constraints = [
         ('unique_site_project',
@@ -101,3 +112,8 @@ class ConstructionSite(models.Model):
     def _compute_total_material_cost(self):
         for rec in self:
             rec.total_material_cost = sum(rec.material_ids.mapped('total_price'))
+
+    @api.depends('expense_ids.amount')
+    def _compute_total_expense(self):
+        for rec in self:
+            rec.total_expense = sum(rec.expense_ids.mapped('amount'))

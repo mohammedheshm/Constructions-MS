@@ -1,0 +1,53 @@
+<odoo>
+    <record id="construction_expense_tree" model="ir.ui.view">
+        <field name="name">construction expense tree</field>
+        <field name="model">construction.expense</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="project_id"/>
+                <field name="site_id"/>
+                <field name="task_id"/>
+                <field name="description"/>
+                <field name="expense_date"/>
+                <field name="amount"/>
+                <field name="expense_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="construction_expense_form" model="ir.ui.view">
+        <field name="name">construction expense form</field>
+        <field name="model">construction.expense</field>
+        <field name="arch" type="xml">
+            <form>
+
+                <sheet>
+                    <group>
+                        <field name="project_id"/>
+                        <field name="site_id"/>
+                        <field name="task_id"/>
+                        <field name="description"/>
+                        <field name="expense_date"/>
+                        <field name="amount"/>
+                        <field name="expense_type"/>
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="construction_expense_action" model="ir.actions.act_window">
+        <field name="name">expenses</field>
+        <field name="res_model">construction.expense</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            id="expenses_menu_item"
+            name="Expenses"
+            parent="financials_menu"
+            action="construction_expense_action"
+            sequence="1"
+    />
+</odoo>

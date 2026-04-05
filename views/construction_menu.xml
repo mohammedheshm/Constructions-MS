@@ -25,5 +25,12 @@
             sequence="3"
     />
 
+    <menuitem
+            id="financials_menu"
+            name="Financials"
+            parent="construction_ms_root_menu"
+            sequence="4"
+    />
+
 
 </odoo>

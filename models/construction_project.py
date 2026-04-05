@@ -15,6 +15,13 @@ class ConstructionProject(models.Model):
         store=False,
         readonly=True,
     )
+    expense_ids = fields.One2many(
+        'construction.expense',
+        'project_id',
+        string='Expenses',
+        readonly=True,
+    )
+
     project_name = fields.Char(string='Project Name', required=True)
     project_code = fields.Char(default='New', string='Project Code', readonly=True)
     customer = fields.Char(string='Customer')
@@ -29,6 +36,11 @@ class ConstructionProject(models.Model):
         ('closed', 'Closed'),
     ], string='State', default='draft', required=True)
     description = fields.Text(string='Description', required=True)
+
+    total_expense = fields.Float(
+        string="Total Expense",
+        compute="_compute_total_expense"
+    )
 
     def action_draft(self):
         for rec in self:
@@ -63,3 +75,8 @@ class ConstructionProject(models.Model):
     def _compute_workforce(self):
         for project in self:
             project.workforce_ids = project.site_ids.mapped('workforce_ids')
+
+    @api.depends('expense_ids.amount')
+    def _compute_total_expense(self):
+        for rec in self:
+            rec.total_expense = sum(rec.expense_ids.mapped('amount'))

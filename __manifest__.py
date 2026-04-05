@@ -17,6 +17,7 @@
         'views/construction_payroll_view.xml',
         'views/construction_site_material_view.xml',
         'views/construction_task_view.xml',
+        'views/construction_expense_view.xml',
     ],
 
     'application': True,

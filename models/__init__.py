@@ -6,3 +6,4 @@ from . import construction_payroll
 from . import construction_site_material
 from . import construction_task
 from . import construction_task_site_material
+from . import construction_expense

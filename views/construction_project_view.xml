@@ -119,6 +119,7 @@
                     </group>
                     <group string="Financial Information">
                         <field name="budget"/>
+                        <field name="expense_ids" widget="many2many_tags"/>
                     </group>
 
                     <group string="Description">
@@ -135,6 +136,19 @@
                                     <field name="state"/>
                                 </tree>
                             </field>
+                        </page>
+                        <page string="Expenses">
+                            <field name="expense_ids">
+                                <tree editable="bottom">
+                                    <field name="description"/>
+                                    <field name="expense_date"/>
+                                    <field name="expense_type"/>
+                                    <field name="amount"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_expense"/>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
