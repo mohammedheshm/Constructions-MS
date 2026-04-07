@@ -81,10 +81,6 @@
                                     <field name="total_price"/>
                                 </tree>
                             </field>
-                            <group class="oe_subtotal_footer oe_right">
-                                <field name="total_material_cost" readonly="1"/>
-                            </group>
-
                         </page>
 
                         <page string="Expenses">
@@ -97,7 +93,10 @@
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
-                                <field name="total_expense"/>
+                                <field name="total_material_cost" readonly="1"/>
+                                <field name="total_expense" readonly="1"/>
+                                <field name="total_site_cost" readonly="1"/>
+
                             </group>
                         </page>
                     </notebook>

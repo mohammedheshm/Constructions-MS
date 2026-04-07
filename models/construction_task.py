@@ -27,8 +27,7 @@ class ConstructionTask(models.Model):
     site_ids = fields.Many2many(
         'construction.site',
         string='Site',
-        readonly=True,
-        compute='_compute_sites'
+        domain="[('project_id','=',project_id)]",
 
     )
 
@@ -71,14 +70,6 @@ class ConstructionTask(models.Model):
                 rec.progress = 100
             else:
                 rec.progress = 0
-
-    @api.depends('project_id')
-    def _compute_sites(self):
-        for rec in self:
-            if rec.project_id:
-                rec.site_ids = rec.project_id.site_ids
-            else:
-                rec.site_ids = self.env['construction.site'].browse([])
 
     @api.onchange('site_ids')
     def _onchange_site_ids(self):

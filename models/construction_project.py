@@ -41,6 +41,15 @@ class ConstructionProject(models.Model):
         string="Total Expense",
         compute="_compute_total_expense"
     )
+    total_material_cost = fields.Float(
+        string="Total Material Cost",
+        compute="_compute_total_material_cost"
+    )
+
+    total_project_cost = fields.Float(
+        string="Total Project Cost",
+        compute="_compute_total_project_cost"
+    )
 
     def action_draft(self):
         for rec in self:
@@ -80,3 +89,13 @@ class ConstructionProject(models.Model):
     def _compute_total_expense(self):
         for rec in self:
             rec.total_expense = sum(rec.expense_ids.mapped('amount'))
+
+    @api.depends('site_ids.total_material_cost')
+    def _compute_total_material_cost(self):
+        for rec in self:
+            rec.total_material_cost = sum(rec.site_ids.mapped('total_material_cost'))
+
+    @api.depends('total_material_cost', 'total_expense')
+    def _compute_total_project_cost(self):
+        for rec in self:
+            rec.total_project_cost = rec.total_material_cost + rec.total_expense

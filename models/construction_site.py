@@ -48,6 +48,11 @@ class ConstructionSite(models.Model):
         compute="_compute_total_expense"
     )
 
+    total_site_cost = fields.Float(
+        string="Total Site Cost",
+        compute="_compute_total_site_cost"
+    )
+
     _sql_constraints = [
         ('unique_site_project',
          'unique(site_name,project_id)',
@@ -117,3 +122,8 @@ class ConstructionSite(models.Model):
     def _compute_total_expense(self):
         for rec in self:
             rec.total_expense = sum(rec.expense_ids.mapped('amount'))
+
+    @api.depends('total_material_cost', 'total_expense')
+    def _compute_total_site_cost(self):
+        for rec in self:
+            rec.total_site_cost = rec.total_material_cost + rec.total_expense

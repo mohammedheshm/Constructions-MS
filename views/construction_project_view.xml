@@ -147,7 +147,9 @@
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
+                                <field name="total_material_cost"/>
                                 <field name="total_expense"/>
+                                <field name="total_project_cost"/>
                             </group>
                         </page>
                     </notebook>

@@ -8,5 +8,6 @@ access_construction_site_material,access_construction_site_material,model_constr
 access_construction_task,access_construction_task,model_construction_task,,1,1,1,1
 access_construction_task_site_material,access_construction_task_site_material,model_construction_task_site_material,,1,1,1,1
 access_construction_expense,access_construction_expense,model_construction_expense,,1,1,1,1
+access_construction_invoice,access_construction_invoice,model_construction_invoice,,1,1,1,1
 
 

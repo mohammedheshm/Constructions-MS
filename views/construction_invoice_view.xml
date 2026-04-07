@@ -1,0 +1,69 @@
+<odoo>
+    <record id="construction_invoice_tree" model="ir.ui.view">
+        <field name="name">invoice tree</field>
+        <field name="model">construction.invoice</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="invoice_number"/>
+                <field name="project_id"/>
+                <field name="invoice_date"/>
+                <field name="amount_total"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="construction_invoice_form" model="ir.ui.view">
+        <field name="name">invoice form</field>
+        <field name="model">construction.invoice</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_post"
+                            type="object"
+                            string="Post"
+                            invisible="state != 'draft'"
+                            class="btn-primary"/>
+
+                    <button name="action_paid"
+                            type="object"
+                            string="Set Paid"
+                            invisible="state != 'posted'"
+                            class="btn-success"/>
+
+                    <button name="action_draft"
+                            type="object"
+                            string="Reset Draft"
+                            invisible="state not in ('posted','paid')"
+                            class="btn-secondary"/>
+
+                    <field name="state" widget="statusbar"/>
+                </header>
+
+                <sheet>
+                    <group>
+                        <field name="invoice_number"/>
+                        <field name="project_id"/>
+                        <field name="site_ids" widget="many2many_tags"/>
+                        <field name="invoice_date"/>
+                        <field name="expense_ids" widget="many2many_tags"/>
+                        <field name="amount_total" readonly="1"/>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="construction_invoice_action" model="ir.actions.act_window">
+        <field name="name">Invoices</field>
+        <field name="res_model">construction.invoice</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="invoices_menu_item"
+              name="Invoices"
+              parent="financials_menu"
+              action="construction_invoice_action"
+              sequence="2"/>
+</odoo>
