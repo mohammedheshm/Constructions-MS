@@ -40,3 +40,4 @@ class ConstructionExpense(models.Model):
         default='misc'
     )
     note = fields.Text(string="Notes")
+

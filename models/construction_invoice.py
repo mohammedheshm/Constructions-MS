@@ -13,7 +13,11 @@ class ConstructionInvoice(models.Model):
     site_ids = fields.Many2many(
         'construction.site',
         string='Sites',
-        domain="[('project_id','=',project_id)]")
+        compute='_compute_sites',
+        store=False,
+        readonly=True
+    )
+
     expense_ids = fields.One2many(
         'construction.expense',
         string='Related Expenses',
@@ -29,19 +33,39 @@ class ConstructionInvoice(models.Model):
         ('paid', 'Paid'),
     ], default='draft', string='Status', tracking=True)
 
+    paid_amount = fields.Float(
+        string="Paid Amount",
+        default=0.0,
+    )
+    payment_date = fields.Date(
+        string="Payment Date",
+    )
 
-    @api.depends('expense_ids.amount')
+    @api.depends('project_id')
+    def _compute_sites(self):
+        for rec in self:
+            if rec.project_id:
+                rec.site_ids = rec.project_id.site_ids
+            else:
+                rec.site_ids = rec.env['construction.site'].browse([])
+
+    @api.depends('project_id')
     def _compute_total_amount(self):
         for rec in self:
-            rec.amount_total = sum(rec.expense_ids.mapped('amount'))
+            if rec.project_id:
+                rec.amount_total = rec.project_id.total_project_cost
+            else:
+                rec.amount_total = 0.0
 
-    @api.depends('project_id', 'site_ids')
+    @api.depends('project_id')
     def _compute_expenses(self):
         for rec in self:
-            domain = [('project_id', '=', rec.project_id.id)]
-            if rec.site_ids:
-                domain.append(('site_id', '=', rec.site_ids.ids))
-            rec.expense_ids = self.env['construction.expense'].search(domain)
+            if rec.project_id:
+                rec.expense_ids = self.env['construction.expense'].search([
+                    ('project_id', '=', rec.project_id.id)
+                ])
+            else:
+                rec.expense_ids = self.env['construction.expense'].browse([])
 
     def action_post(self):
         for rec in self:
@@ -49,8 +73,34 @@ class ConstructionInvoice(models.Model):
 
     def action_paid(self):
         for rec in self:
+            if rec.project_id:
+                # مجموع المدفوع بالفعل بدون هذه الفاتورة
+                paid_so_far = sum(rec.project_id.invoice_ids.filtered(
+                    lambda i: i.state == 'paid' and i.id != rec.id
+                ).mapped('paid_amount'))
+
+                remaining_for_project = rec.project_id.total_project_cost - paid_so_far
+                if rec.paid_amount > remaining_for_project:
+                    raise ValidationError(
+                        f"Paid Amount ({rec.paid_amount}) cannot exceed remaining project cost ({remaining_for_project})!"
+                    )
             rec.state = 'paid'
 
     def action_draft(self):
         for rec in self:
             rec.state = 'draft'
+
+    @api.constrains('paid_amount', 'state', 'project_id')
+    def _check_paid_amount(self):
+        for rec in self:
+            if rec.state == 'paid' and rec.project_id:
+                paid_so_far = sum(rec.project_id.invoice_ids.filtered(
+                    lambda i: i.state == 'paid' and i.id != rec.id
+                ).mapped('paid_amount'))
+
+                remaining_for_project = rec.project_id.total_project_cost - paid_so_far
+
+                if rec.paid_amount > remaining_for_project:
+                    raise ValidationError(
+                        f"Paid Amount ({rec.paid_amount}) cannot exceed remaining project cost ({remaining_for_project})!"
+                    )
