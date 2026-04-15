@@ -51,6 +51,11 @@ class ConstructionProject(models.Model):
         compute="_compute_total_project_cost"
     )
 
+    contract_value = fields.Float(
+        string="Contract Value",
+        required=True
+    )
+
     invoice_ids = fields.One2many(
         'construction.invoice',
         'project_id',
@@ -65,7 +70,13 @@ class ConstructionProject(models.Model):
 
     remaining_amount = fields.Float(
         string="Remaining Amount",
-        compute="_compute_total_paid",
+        compute="_compute_remaining_amount",
+        store=True
+    )
+
+    net_profit = fields.Float(
+        string="Net Profit",
+        compute="_compute_net_profit",
         store=True
     )
 
@@ -74,14 +85,6 @@ class ConstructionProject(models.Model):
         compute="_compute_remaining_status",
         store=True
     )
-
-    @api.depends('remaining_amount')
-    def _compute_remaining_status(self):
-        for rec in self:
-            if rec.remaining_amount == 0:
-                rec.remaining_status = " All project expenses have been paid.✅"
-            else:
-                rec.remaining_status = f" Remaining payment: {rec.remaining_amount}"
 
     def action_draft(self):
         for rec in self:
@@ -138,3 +141,21 @@ class ConstructionProject(models.Model):
             total_paid = sum(rec.invoice_ids.filtered(lambda i: i.state == 'paid').mapped('paid_amount'))
             rec.total_paid = total_paid
             rec.remaining_amount = max(rec.total_project_cost - total_paid, 0.0)
+
+    @api.depends('contract_value', 'total_paid')
+    def _compute_remaining_amount(self):
+        for rec in self:
+            rec.remaining_amount = rec.contract_value - rec.total_paid
+
+    @api.depends('total_paid', 'total_project_cost')
+    def _compute_net_profit(self):
+        for rec in self:
+            rec.net_profit = rec.total_paid - rec.total_project_cost
+
+    @api.depends('remaining_amount')
+    def _compute_remaining_status(self):
+        for rec in self:
+            if rec.remaining_amount <= 0:
+                rec.remaining_status = "Fully Paid ✅"
+            else:
+                rec.remaining_status = f"Remaining: {rec.remaining_amount}"

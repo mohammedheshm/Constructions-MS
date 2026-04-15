@@ -122,7 +122,9 @@
                         <field name="expense_ids" widget="many2many_tags"/>
                     </group>
                     <group string="Project Payment Summary" colspan="4">
+                        <field name="contract_value"/>
                         <field name="total_paid" readonly="1" class="oe_highlight"/>
+                        <field name="remaining_amount" readonly="1" class="oe_highlight"/>
                         <field name="remaining_status" readonly="1" class="oe_highlight"/>
                     </group>
 
@@ -154,6 +156,7 @@
                                 <field name="total_material_cost"/>
                                 <field name="total_expense"/>
                                 <field name="total_project_cost"/>
+                                <field name="net_profit"/>
                             </group>
                         </page>
                     </notebook>

@@ -24,7 +24,7 @@ class ConstructionInvoice(models.Model):
         compute='_compute_expenses'
     )
     invoice_date = fields.Date(string='Invoice Date', required=True, default=fields.Date.context_today)
-    amount_total = fields.Float(string='Total Amount', compute='_compute_total_amount', readonly=True)
+    amount_total = fields.Float(string='Total Amount', readonly=True)
     notes = fields.Text(string='Notes')
 
     state = fields.Selection([
@@ -50,14 +50,6 @@ class ConstructionInvoice(models.Model):
                 rec.site_ids = rec.env['construction.site'].browse([])
 
     @api.depends('project_id')
-    def _compute_total_amount(self):
-        for rec in self:
-            if rec.project_id:
-                rec.amount_total = rec.project_id.total_project_cost
-            else:
-                rec.amount_total = 0.0
-
-    @api.depends('project_id')
     def _compute_expenses(self):
         for rec in self:
             if rec.project_id:
@@ -69,20 +61,36 @@ class ConstructionInvoice(models.Model):
 
     def action_post(self):
         for rec in self:
+
+            if not rec.project_id:
+                raise ValidationError("Project is required.")
+
+            if rec.amount_total <= 0:
+                raise ValidationError("Invoice amount must be greater than 0.")
+
+            remaining = rec.project_id.contract_value - rec.project_id.total_paid
+
+            if remaining <= 0:
+                raise ValidationError("Contract already fully paid.")
+
+            if rec.amount_total > remaining:
+                raise ValidationError(
+                    f"Cannot post invoice. Amount ({rec.amount_total}) exceeds remaining contract ({remaining})."
+                )
+
             rec.state = 'posted'
 
     def action_paid(self):
         for rec in self:
-            if rec.project_id:
-                paid_so_far = sum(rec.project_id.invoice_ids.filtered(
-                    lambda i: i.state == 'paid' and i.id != rec.id
-                ).mapped('paid_amount'))
 
-                remaining_for_project = rec.project_id.total_project_cost - paid_so_far
-                if rec.paid_amount > remaining_for_project:
+            if rec.project_id:
+                remaining = rec.project_id.contract_value - rec.project_id.total_paid
+
+                if rec.paid_amount > remaining:
                     raise ValidationError(
-                        f"Paid Amount ({rec.paid_amount}) cannot exceed remaining project cost ({remaining_for_project})!"
+                        f"Paid Amount ({rec.paid_amount}) exceeds remaining contract ({remaining})!"
                     )
+
             rec.state = 'paid'
 
     def action_draft(self):
@@ -92,14 +100,55 @@ class ConstructionInvoice(models.Model):
     @api.constrains('paid_amount', 'state', 'project_id')
     def _check_paid_amount(self):
         for rec in self:
+
             if rec.state == 'paid' and rec.project_id:
-                paid_so_far = sum(rec.project_id.invoice_ids.filtered(
-                    lambda i: i.state == 'paid' and i.id != rec.id
-                ).mapped('paid_amount'))
 
-                remaining_for_project = rec.project_id.total_project_cost - paid_so_far
+                paid_so_far = sum(
+                    rec.project_id.invoice_ids.filtered(
+                        lambda i: i.state == 'paid' and i.id != rec.id
+                    ).mapped('paid_amount')
+                )
 
-                if rec.paid_amount > remaining_for_project:
+                remaining_contract = rec.project_id.contract_value - paid_so_far
+
+                if rec.paid_amount > remaining_contract:
                     raise ValidationError(
-                        f"Paid Amount ({rec.paid_amount}) cannot exceed remaining project cost ({remaining_for_project})!"
+                        f"Paid Amount ({rec.paid_amount}) exceeds remaining contract ({remaining_contract})!"
                     )
+
+
+    def _get_remaining_contract(self, project):
+        return project.contract_value - project.total_paid
+
+    @api.onchange('project_id')
+    def _onchange_project_id(self):
+        for rec in self:
+            if rec.project_id:
+                rec.amount_total = self._get_remaining_contract(rec.project_id)
+            else:
+                rec.amount_total = 0.0
+
+    @api.model
+    def create(self, vals):
+
+        if vals.get('project_id'):
+            project = self.env['construction.project'].browse(vals['project_id'])
+
+            remaining = project.contract_value - project.total_paid
+
+            amount = vals.get('amount_total')
+
+            if amount in [None, False]:
+                amount = remaining
+
+            if amount <= 0:
+                raise ValidationError("Invoice amount must be greater than 0.")
+
+            if amount > remaining:
+                raise ValidationError(
+                    f"Cannot create invoice. Amount ({amount}) exceeds remaining contract ({remaining})."
+                )
+
+            vals['amount_total'] = amount
+
+        return super().create(vals)
