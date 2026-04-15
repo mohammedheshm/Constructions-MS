@@ -74,7 +74,6 @@ class ConstructionInvoice(models.Model):
     def action_paid(self):
         for rec in self:
             if rec.project_id:
-                # مجموع المدفوع بالفعل بدون هذه الفاتورة
                 paid_so_far = sum(rec.project_id.invoice_ids.filtered(
                     lambda i: i.state == 'paid' and i.id != rec.id
                 ).mapped('paid_amount'))
