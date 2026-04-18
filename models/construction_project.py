@@ -22,6 +22,12 @@ class ConstructionProject(models.Model):
         readonly=True,
     )
 
+    workforce_cost = fields.Float(
+        string="Workforce Cost",
+        compute='_compute_workforce_cost',
+        store=True
+    )
+
     project_name = fields.Char(string='Project Name', required=True)
     project_code = fields.Char(default='New', string='Project Code', readonly=True)
     customer = fields.Char(string='Customer')
@@ -123,7 +129,8 @@ class ConstructionProject(models.Model):
     @api.depends('expense_ids.amount')
     def _compute_total_expense(self):
         for rec in self:
-            rec.total_expense = sum(rec.expense_ids.mapped('amount'))
+            manual_expenses = sum(rec.expense_ids.mapped('amount'))
+            rec.total_expense = manual_expenses + rec.workforce_cost
 
     @api.depends('site_ids.total_material_cost')
     def _compute_total_material_cost(self):
@@ -159,3 +166,18 @@ class ConstructionProject(models.Model):
                 rec.remaining_status = "Fully Paid ✅"
             else:
                 rec.remaining_status = f"Remaining: {rec.remaining_amount}"
+
+    @api.depends(
+        'workforce_ids.daily_cost',
+        'start_date',
+        'end_date'
+    )
+    def _compute_workforce_cost(self):
+        for rec in self:
+            if rec.start_date and rec.end_date:
+                days = (rec.end_date - rec.start_date).days + 1
+            else:
+                days = 0
+
+            daily_total = sum(rec.workforce_ids.mapped('daily_cost'))
+            rec.workforce_cost = daily_total * days

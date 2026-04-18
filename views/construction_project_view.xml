@@ -108,7 +108,7 @@
                             <field name="customer"/>
                             <field name="project_manager"/>
                             <field name="workforce_ids" widget="many2many_tags" readonly="1"/>
-                            <field name="site_ids" widget="many2many_tags"
+                            <field name="site_ids" widget="many2many_tags" readonly="1"
                                    help="Sites can't be edited here. Use the 'Sites' tab below to add or edit Sites."/>
                         </group>
 
@@ -154,6 +154,7 @@
                             </field>
                             <group class="oe_subtotal_footer oe_right">
                                 <field name="total_material_cost"/>
+                                <field name="workforce_cost"/>
                                 <field name="total_expense"/>
                                 <field name="total_project_cost"/>
                                 <field name="net_profit"/>
