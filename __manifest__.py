@@ -21,6 +21,7 @@
         'views/construction_invoice_view.xml',
         'reports/project_report.xml',
         'reports/site_report.xml',
+        'reports/expense_report.xml',
 
     ],
 
