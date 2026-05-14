@@ -1,0 +1,110 @@
+<odoo>
+    <record id="invoice_report" model="ir.actions.report">
+        <field name="name">Invoice Report</field>
+        <field name="model">construction.invoice</field>
+        <field name="report_type">qweb-html</field>
+        <!--<field name="report_type">qweb-pdf</field>-->
+        <field name="binding_model_id" ref="model_construction_invoice"/>
+        <field name="binding_type">report</field>
+        <field name="report_name">construction_management_system.invoice_report_template</field>
+    </record>
+
+    <template id="invoice_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+
+                    <div class="page">
+
+                        <h2 style="text-align:center;">
+                            Invoice Report
+                        </h2>
+
+                        <br/>
+
+                        <table style="border-collapse: collapse; width:100%;">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th style="border:1px solid #000; padding:6px;">
+                                        Invoice Number
+                                    </th>
+
+                                    <th style="border:1px solid #000; padding:6px;">
+                                        Project
+                                    </th>
+
+                                    <th style="border:1px solid #000; padding:6px;">
+                                        Sites
+                                    </th>
+
+                                    <th style="border:1px solid #000; padding:6px;">
+                                        Invoice Date
+                                    </th>
+
+                                    <th style="border:1px solid #000; padding:6px;">
+                                        Amount
+                                    </th>
+
+                                    <th style="border:1px solid #000; padding:6px;">
+                                        Paid Amount
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+
+                                    <td style="border:1px solid #000; padding:6px;">
+                                        <span t-field="o.invoice_number"/>
+                                    </td>
+
+                                    <td style="border:1px solid #000; padding:6px;">
+                                        <span t-field="o.project_id"/>
+                                    </td>
+
+                                    <td style="border:1px solid #000; padding:6px;">
+
+                                        <t t-foreach="o.site_ids" t-as="site">
+
+                                            <span t-field="site.site_name"/>
+
+                                            <br/>
+
+                                        </t>
+
+                                    </td>
+
+                                    <td style="border:1px solid #000; padding:6px;">
+                                        <span t-field="o.invoice_date"/>
+                                    </td>
+
+                                    <td style="border:1px solid #000; padding:6px;">
+                                        <span t-field="o.amount_total"/>
+                                    </td>
+
+                                    <td style="border:1px solid #000; padding:6px;">
+                                        <span t-field="o.paid_amount"/>
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </t>
+
+            </t>
+
+        </t>
+
+    </template>
+</odoo>

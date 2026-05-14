@@ -22,6 +22,7 @@
         'reports/project_report.xml',
         'reports/site_report.xml',
         'reports/expense_report.xml',
+        'reports/invoice_report.xml',
 
     ],
 
