@@ -59,6 +59,12 @@ class ConstructionSite(models.Model):
          'Site Name must be unique per Project!')
     ]
 
+    workforce_cost = fields.Float(
+        string='Workforce Cost',
+        compute='_compute_workforce_cost',
+        store=True
+    )
+
     def action_draft(self):
         for rec in self:
             rec.state = 'draft'
@@ -123,7 +129,21 @@ class ConstructionSite(models.Model):
         for rec in self:
             rec.total_expense = sum(rec.expense_ids.mapped('amount'))
 
-    @api.depends('total_material_cost', 'total_expense')
+    @api.depends('total_material_cost', 'total_expense', 'workforce_cost')
     def _compute_total_site_cost(self):
         for rec in self:
-            rec.total_site_cost = rec.total_material_cost + rec.total_expense
+            rec.total_site_cost = (
+                    rec.total_material_cost +
+                    rec.total_expense +
+                    rec.workforce_cost
+            )
+
+    @api.depends('workforce_ids.daily_cost', 'start_date', 'end_date')
+    def _compute_workforce_cost(self):
+        for rec in self:
+            if rec.start_date and rec.end_date:
+                days = (rec.end_date - rec.start_date).days + 1
+            else:
+                days = 0
+            daily_total = sum(rec.workforce_ids.mapped('daily_cost'))
+            rec.workforce_cost = daily_total * days

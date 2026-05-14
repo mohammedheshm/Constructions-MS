@@ -19,6 +19,9 @@
         'views/construction_task_view.xml',
         'views/construction_expense_view.xml',
         'views/construction_invoice_view.xml',
+        'reports/project_report.xml',
+        'reports/site_report.xml',
+
     ],
 
     'application': True,

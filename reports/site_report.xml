@@ -1,0 +1,106 @@
+<odoo>
+
+    <record id="site_report" model="ir.actions.report">
+        <field name="name">Site Report</field>
+        <field name="model">construction.site</field>
+        <field name="report_type">qweb-html</field>
+        <field name="binding_model_id" ref="model_construction_site"/>
+        <field name="binding_type">report</field>
+        <field name="report_name">construction_management_system.site_report_template</field>
+    </record>
+
+
+    <template id="site_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+
+                    <div class="page">
+
+                        <h2 style="text-align:center;">Site Report</h2>
+
+                        <br/>
+
+                        <h3>Site Information</h3>
+
+                        <table class="table table-sm">
+
+                            <tr>
+                                <td>
+                                    <strong>Site Name</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.site_name"/>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <strong>Project</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.project_id"/>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <br/>
+
+                        <h3>Cost Breakdown</h3>
+
+                        <table style="border-collapse: collapse; width:100%;">
+
+                            <thead>
+                                <tr>
+                                    <th style="border:1px solid #000; padding:6px;">Cost Type</th>
+                                    <th style="border:1px solid #000; padding:6px;">Amount</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+                                    <td style="border:1px solid #000; padding:6px;">Workforce Cost</td>
+                                    <td style="border:1px solid #000; padding:6px;">
+                                        <span t-field="o.workforce_cost"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="border:1px solid #000; padding:6px;">Materials Cost</td>
+                                    <td style="border:1px solid #000; padding:6px;">
+                                        <span t-field="o.total_material_cost"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="border:1px solid #000; padding:6px;">Expenses Cost</td>
+                                    <td style="border:1px solid #000; padding:6px;">
+                                        <span t-field="o.total_expense"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="border:1px solid #000; padding:6px;">
+                                        <strong>Total Cost</strong>
+                                    </td>
+                                    <td style="border:1px solid #000; padding:6px;">
+                                        <strong>
+                                            <span t-field="o.total_site_cost"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

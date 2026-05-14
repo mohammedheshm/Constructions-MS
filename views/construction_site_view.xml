@@ -95,6 +95,7 @@
                             <group class="oe_subtotal_footer oe_right">
                                 <field name="total_material_cost" readonly="1"/>
                                 <field name="total_expense" readonly="1"/>
+                                <field name="workforce_cost" readonly="1"/>
                                 <field name="total_site_cost" readonly="1"/>
 
                             </group>
