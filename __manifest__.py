@@ -5,6 +5,7 @@
     'version': '17.0.0.1.0',
     'depends': ['base', 'contacts', 'account'],
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'data/project_sequence.xml',
         'data/site_sequence.xml',
